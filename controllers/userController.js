@@ -1,16 +1,15 @@
 const userService = require('../services/userService');
 const jwt = require('jsonwebtoken');
 
-const getUser = async (req, res) => {
-    const authData = await jwt.decode(req.headers['authorization'].split(' ')[1]);
-    console.log(req.headers['authorization'].split(' ')[1]);
-    console.log(authData);
+const getUsers = async (req, res) => {
     try {
-        const getUsers = userService.getUsers;
-        res.status(200).send(getUsers);
+        console.log("inside try")
+        const getUserData = await userService.getUsers();
+        console.log(getUserData);
+        res.status(200).send(getUserData);
     }
     catch (err) {
-        res.status(500).json({ message: 'Error while reading the Users. Exception is ' + err });
+        res.status(500).send({ message: 'Error while reading the Users. Exception is ' + err });
     }
 };
 
@@ -105,7 +104,7 @@ const authenticateUser = async (req, res) => {
 
 
 module.exports = {
-    getUser,
+    getUsers,
     saveUser,
     updateUser,
     deleteUser,

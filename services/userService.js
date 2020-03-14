@@ -3,6 +3,7 @@ const User = require('../models/User');
 const getUsers = async () => {
     try {
         const users = await User.find();
+        console.log(users)
         return users;
     }
     catch(err) {
