@@ -44,7 +44,8 @@ const userSchema = mongoose.Schema({
     },
     UpdatedDateTime: {
         type: String,
-        requird: false
+        requird: false,
+        default: Date.now
     }
 });
 
