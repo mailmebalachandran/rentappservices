@@ -6,7 +6,8 @@ require('dotenv/config');
 
 var router = express.Router();
 
-router.get('/get', jwtAuthValidation, async (req, res)=>{
+router.get('/User', async (req, res)=>{
+    console.log("service hitted");
     try
     {
     const users = await User.find();
@@ -17,18 +18,18 @@ router.get('/get', jwtAuthValidation, async (req, res)=>{
     }
 });
 
-router.post('/save', jwtAuthValidation, async  (req, res) =>{
+router.post('/User', async  (req, res) =>{
     try
     {
-        const authData = jwt.verify(req.token, process.env.JWT_PRIVATE_KEY, (err, authData) => {
+        // const authData = jwt.verify(req.token, process.env.JWT_PRIVATE_KEY, (err, authData) => {
 
-            if(err){
-                res.sendStatus(403);
-            }
-            else{
-                return authData;
-            }
-        });
+        //     if(err){
+        //         res.sendStatus(403);
+        //     }
+        //     else{
+        //         return authData;
+        //     }
+        // });
         const userData = new User({
             FirstName: req.body.FirstName,
             MiddleName: req.body.MiddleName,
