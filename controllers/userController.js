@@ -3,9 +3,7 @@ const jwt = require('jsonwebtoken');
 
 const getUsers = async (req, res) => {
     try {
-        console.log("inside try")
         const getUserData = await userService.getUsers();
-        console.log(getUserData);
         res.status(200).send(getUserData);
     }
     catch (err) {
@@ -33,12 +31,19 @@ const saveUser = (async (req, res) => {
             EmailId,
             UserName,
             Password,
-            CreatedBy: authData.user_id,
+            CreatedBy: authData.user._id,
             UpdatedBy: "",
             UpdatedDateTime:""
         }
-        const savedUser = await userService.saveUser(userData)
-        res.status(200).send(savedUser);
+        const checkUser = await userService.checkUserAlreadyExists(userData.EmailId, userData.UserName, userData.PhoneNumber);
+        if(checkUser === undefined || checkUser === null)
+        {
+            const savedUser = await userService.saveUser(userData)
+            res.status(200).send(savedUser);
+        }
+        else{
+            res.status(400).send({message: "The emailId, userName and phoneNumber is aready exists."});
+        }
     }
     catch (err) {
         res.status(400).send({ message: 'Error while saving the user. Exception is ' + err });
@@ -66,7 +71,7 @@ const updateUser = (async (req, res) => {
             EmailId,
             UserName,
             Password,
-            UpdatedBy: authData.user_id
+            UpdatedBy: authData.user._id
         }
         const updatedUser = await userService.updateUser(userData);
         res.status(200).send(updatedUser);
@@ -78,7 +83,7 @@ const updateUser = (async (req, res) => {
 
 const deleteUser = (async (req, res) => {
     try {
-        const deletedUser = userService.deleteUser(req.body._id)
+        const deletedUser = await userService.deleteUser(req.body._id)
         res.status(200).send(deletedUser);
     }
     catch (err) {
@@ -87,7 +92,6 @@ const deleteUser = (async (req, res) => {
 });
 
 const authenticateUser = async (req, res) => {
-    //Mock User 
     try {
         const user = await userService.authenticateUser(req.body.UserName, req.body.Password); 
         jwt.sign({ user: user }, process.env.JWT_PRIVATE_KEY, { expiresIn: '1d' }, (err, token) => {

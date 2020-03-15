@@ -3,7 +3,6 @@ const User = require('../models/User');
 const getUsers = async () => {
     try {
         const users = await User.find();
-        console.log(users)
         return users;
     }
     catch(err) {
@@ -44,12 +43,20 @@ const deleteUser = async (_id) => {
 
 const authenticateUser = async (userName, password) => {
     try {
-        console.log(userName);
-        const user = await User.findOne({ UserName: userName })
-        console.log(user);
+        const user = await User.findOne({ UserName: userName, Password: password })
         return user;
     }
     catch(err) {
+        throw err;
+    }
+}
+
+const checkUserAlreadyExists = async (emailId, userName, phoneNumber) =>{
+    try{
+        const user = await User.findOne({EmailId: emailId, UserName: userName, PhoneNumber : phoneNumber});
+        return user;
+    }
+    catch(err){
         throw err;
     }
 }
@@ -60,5 +67,6 @@ module.exports = {
     saveUser,
     updateUser,
     deleteUser,
-    authenticateUser
+    authenticateUser,
+    checkUserAlreadyExists
 }
