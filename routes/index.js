@@ -7,10 +7,10 @@ require('dotenv/config');
 
 const router = express.Router();
 
-router.get('/getUsers', jwtAuthValidation, userController.getUsers);
-router.post('/saveUser', jwtAuthValidation, userController.saveUser);
-router.put('/updateUser', jwtAuthValidation, userController.updateUser);
-router.delete('/deleteUser', jwtAuthValidation, userController.deleteUser);
+router.get('/getUsers', userController.getUsers);
+router.post('/saveUser', userController.saveUser);
+router.put('/updateUser', userController.updateUser);
+router.delete('/deleteUser', userController.deleteUser);
 router.post('/authenticateUser', userController.authenticateUser);
 
 module.exports = router;

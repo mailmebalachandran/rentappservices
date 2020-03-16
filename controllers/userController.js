@@ -36,8 +36,10 @@ const saveUser = (async (req, res) => {
             UpdatedDateTime:""
         }
         const checkUser = await userService.checkUserAlreadyExists(userData.EmailId, userData.UserName, userData.PhoneNumber);
+        console.log(checkUser);
         if(checkUser === undefined || checkUser === null)
         {
+            console.log(userData);
             const savedUser = await userService.saveUser(userData)
             res.status(200).send(savedUser);
         }
@@ -93,7 +95,7 @@ const deleteUser = (async (req, res) => {
 
 const authenticateUser = async (req, res) => {
     try {
-        const user = await userService.authenticateUser(req.body.UserName, req.body.Password); 
+        const user = await userService.authenticateUser(req.body.UserName, req.body.Password);
         jwt.sign({ user: user }, process.env.JWT_PRIVATE_KEY, { expiresIn: '1d' }, (err, token) => {
             res.status(200).send({
                 token: token
