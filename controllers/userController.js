@@ -1,5 +1,6 @@
 const userService = require('../services/userService');
 const jwt = require('jsonwebtoken');
+const userValidation = require('../validation/userValidation');
 
 const getUsers = async (req, res) => {
     try {
@@ -13,6 +14,10 @@ const getUsers = async (req, res) => {
 
 const saveUser = (async (req, res) => {
     try {
+        const validationResult = userValidation.saveValidation(req.body);
+        if(validationResult){
+            res.status(400).send({message:validationResult.details[0].messsage})
+        }
         const token = req.headers['authorization'];
         const authData = jwt.decode(token.split(' ')[1]);
         const {
@@ -53,6 +58,10 @@ const saveUser = (async (req, res) => {
 
 const updateUser = (async (req, res) => {
     try {
+        const validationResult = userValidation.saveValidation(req.body);
+        if(validationResult){
+            res.status(400).send({message:validationResult.details[0].messsage})
+        }
         const token = req.headers['authorization'];
         const authData = jwt.decode(token.split(' ')[1]);
         const {
@@ -85,6 +94,10 @@ const updateUser = (async (req, res) => {
 
 const deleteUser = (async (req, res) => {
     try {
+        const validationResult = userValidation.deleteValidation(req.body);
+        if(validationResult != null){
+            res.status(400).send({message:validationResult.details[0].message})
+        }
         const deletedUser = await userService.deleteUser(req.body._id)
         res.status(200).send(deletedUser);
     }
@@ -95,8 +108,11 @@ const deleteUser = (async (req, res) => {
 
 const authenticateUser = async (req, res) => {
     try {
+        const validationResult = userValidation.authenticateValidation(req.body);
+        if(validationResult != null){
+            res.status(400).send({message:validationResult.details[0].message})
+        }
         const user = await userService.authenticateUser(req.body.UserName, req.body.Password);
-        
         jwt.sign({ user: user }, process.env.JWT_PRIVATE_KEY, { expiresIn: '1d' }, (err, token) => {
             res.status(200).send({
                 token: token

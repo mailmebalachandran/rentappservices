@@ -1,25 +1,31 @@
 // let mongoose = require('mongoose');
 // let User = require('../models/User');
+// require('dotenv/config');
 
 // let chai = require('chai');
 // let chaihttp = require('chai-http');
-// let server = require('../app');
+// let app = require('../app');
 
 // let should = chai.should();
 
 // chai.use(chaihttp);
 
 // describe('Users', () => {
-//     // beforeEach((done) =>{
-//     //     User.remove({}, (err) =>{
-//     //         done();
-//     //     })
-//     // })
+//     before(async (done) => {
+//         const Mockgoose = require('mockgoose').Mockgoose;
+//         const mockgoose = new Mockgoose(mongoose);
+//         await mockgoose.prepareStorage().then(function() {
+//             mongoose.connect(process.env.DB_CONNECTION, function(err) {
+//                 console.log("Mock db Connected");
+//                 done(err);
+//             });
+//         });
+//     });
 
 //     describe('/Get users', () => {
 //         it('it should GET all the Users', (done) =>{
-//             chai.request('http://localhost:5000/UserService/User')
-//                 .get('/')
+//             chai.request(app)
+//                 .get('/UserService/User')
 //                 .end((err, res) =>{
 //                     res.should.have.status(200);
 //                     res.body.should.be.a('array');
