@@ -1,13 +1,12 @@
-swagger:"2.0"
+swagger: "2.0"
 info:
-  version:"1.0.0"
-  title:"User service"
+  version: "1.0.0"
+  title: "User service"
 host: localhost:5000
-basepath: 
+basepath: /
 schemes :
-  -http
+  - "http"
 consumes:
-  -application/json
+  - "application/json"
 produces:
-  -application.json
-paths:
+  - "application.json"

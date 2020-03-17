@@ -1,4 +1,5 @@
 const User = require('../models/User');
+const ObjectID = require('mongodb').ObjectID;
 
 const getUsers = async () => {
     try {
@@ -23,7 +24,7 @@ const saveUser = async (user) => {
 
 const updateUser = async (user) => {
     try {
-        const updatedUser = await User.updateOne({ _id: user._id }, { $set: { FirstName: user.FirstName, MiddleName: user.MiddleName, LastName: user.LastName, PhoneNumber: user.PhoneNumber, EmailId: user.EmailId, UserName: user.UserName, Password: user.Password, UpdatedBy: user.UpdatedBy } });
+        const updatedUser = await User.findOneAndUpdate({_id : ObjectID(user._id)}, { $set: { "FirstName": user.FirstName, "MiddleName": user.MiddleName, "LastName": user.LastName, "PhoneNumber": user.PhoneNumber, "EmailId": user.EmailId, "UserName": user.UserName, "Password": user.Password, "UpdatedBy": user.UpdatedBy } });
         return updatedUser;
     }
     catch(err) {
@@ -44,6 +45,7 @@ const deleteUser = async (_id) => {
 const authenticateUser = async (userName, password) => {
     try {
         const user = await User.findOne({ UserName: userName, Password: password })
+        console.log(user);
         return user;
     }
     catch(err) {
@@ -51,9 +53,9 @@ const authenticateUser = async (userName, password) => {
     }
 }
 
-const checkUserAlreadyExists = async (emailId, userName, phoneNumber) =>{
+const checkUserAlreadyExists = async (UserName) =>{
     try{
-        const user = await User.findOne({EmailId: emailId, UserName: userName, PhoneNumber : phoneNumber});
+        const user = await User.findOne({UserName});
         return user;
     }
     catch(err){

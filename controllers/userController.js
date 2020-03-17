@@ -13,7 +13,8 @@ const getUsers = async (req, res) => {
 
 const saveUser = (async (req, res) => {
     try {
-        const authData = jwt.decode(req.headers['authorization'].split(' ')[1]);
+        const token = req.headers['authorization'];
+        const authData = jwt.decode(token.split(' ')[1]);
         const {
             FirstName,
             MiddleName,
@@ -35,16 +36,14 @@ const saveUser = (async (req, res) => {
             UpdatedBy: "",
             UpdatedDateTime:""
         }
-        const checkUser = await userService.checkUserAlreadyExists(userData.EmailId, userData.UserName, userData.PhoneNumber);
-        console.log(checkUser);
+        const checkUser = await userService.checkUserAlreadyExists(userData.UserName);
         if(checkUser === undefined || checkUser === null)
         {
-            console.log(userData);
             const savedUser = await userService.saveUser(userData)
             res.status(200).send(savedUser);
         }
         else{
-            res.status(400).send({message: "The emailId, userName and phoneNumber is aready exists."});
+            res.status(400).send({message: "The Username is already exists."});
         }
     }
     catch (err) {
@@ -53,9 +52,9 @@ const saveUser = (async (req, res) => {
 });
 
 const updateUser = (async (req, res) => {
-    
     try {
-        const authData = jwt.decode(req.headers['authorization'].split(' ')[1]);
+        const token = req.headers['authorization'];
+        const authData = jwt.decode(token.split(' ')[1]);
         const {
             FirstName,
             MiddleName,
@@ -75,6 +74,7 @@ const updateUser = (async (req, res) => {
             Password,
             UpdatedBy: authData.user._id
         }
+        userData._id= req.body._id;
         const updatedUser = await userService.updateUser(userData);
         res.status(200).send(updatedUser);
     }
@@ -96,6 +96,7 @@ const deleteUser = (async (req, res) => {
 const authenticateUser = async (req, res) => {
     try {
         const user = await userService.authenticateUser(req.body.UserName, req.body.Password);
+        
         jwt.sign({ user: user }, process.env.JWT_PRIVATE_KEY, { expiresIn: '1d' }, (err, token) => {
             res.status(200).send({
                 token: token
