@@ -14,6 +14,7 @@ let defaultUser = {
         UserName: "geetha",
         Password: "nullvoid"
 }
+let val;
 
 let updatedUser = {
     _id: "",
