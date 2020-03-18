@@ -24,7 +24,7 @@ const saveUser = async (user) => {
 
 const updateUser = async (user) => {
     try {
-        const updatedUser = await User.findOneAndUpdate({_id : ObjectID(user._id)}, { $set: { "FirstName": user.FirstName, "MiddleName": user.MiddleName, "LastName": user.LastName, "PhoneNumber": user.PhoneNumber, "EmailId": user.EmailId, "UserName": user.UserName, "Password": user.Password, "UpdatedBy": user.UpdatedBy } });
+        const updatedUser = await User.findByIdAndUpdate({_id : ObjectID(user._id)}, { $set: { "FirstName": user.FirstName, "MiddleName": user.MiddleName, "LastName": user.LastName, "PhoneNumber": user.PhoneNumber, "EmailId": user.EmailId, "UserName": user.UserName, "Password": user.Password, "UpdatedBy": user.UpdatedBy } });
         return updatedUser;
     }
     catch(err) {
@@ -34,7 +34,7 @@ const updateUser = async (user) => {
 
 const deleteUser = async (_id) => {
     try {
-        const deletedUser = await User.remove({ _id });
+        const deletedUser = await User.deleteOne({ _id });
         return deletedUser;
     }
     catch(err) {

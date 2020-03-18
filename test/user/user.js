@@ -20,7 +20,7 @@ let updatedUser = {
     FirstName:"Geetha1",
     MiddleName:"",
     LastName: "Balachandran2",
-    PhoneNumber: "73585294731",
+    PhoneNumber: "7358529473",
     EmailId: "bgeetha2514@gmail.com",
     UserName: "geetha",
     Password: "nullvoid"
@@ -88,11 +88,11 @@ describe('POST /user', () =>{
 
     it('Update User', function(done) {
         updatedUser._id = saveUserId;
-        console.log("updated User Data : " +updatedUser);
+        console.log(saveUserId);
         request(app)
             .put('/userService/updateUser') 
+            .set('authorization', 'bearer ' + token)
             .send(updatedUser)
-            .set('authorization', 'bearer ' +token)
             .then((res) => {
                 const body = res.body;
                 console.log(body);
@@ -117,8 +117,8 @@ describe('POST /user', () =>{
             .set('authorization', 'bearer ' +token)
             .then((res) => {
                 const body = res.body;
-                expect(body).to.contain.property('deletedCount').to.eql(0);
-                expect(body).to.contain.property('ok').to.eql(0);
+                expect(body).to.contain.property('deletedCount').to.eql(1);
+                expect(body).to.contain.property('ok').to.eql(1);
                 done();
             })
             .catch((err) => {done(err);});

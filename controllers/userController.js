@@ -63,7 +63,7 @@ const updateUser = (async (req, res) => {
         if(validationResult){
             res.status(400).send({message:validationResult.details[0].messsage})
         }
-        
+        console.log(validationResult);
         const token = req.headers['authorization'];
         const authData = jwt.decode(token.split(' ')[1]);
         const {
