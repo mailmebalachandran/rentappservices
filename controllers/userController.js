@@ -58,7 +58,7 @@ const saveUser = (async (req, res) => {
 
 const updateUser = (async (req, res) => {
     try {
-        const validationResult = userValidation.saveValidation(req.body);
+        const validationResult = userValidation.updateValidation(req.body);
         if(validationResult){
             res.status(400).send({message:validationResult.details[0].messsage})
         }

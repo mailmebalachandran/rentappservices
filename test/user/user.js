@@ -109,8 +109,8 @@ describe('POST /user', () =>{
             .set('authorization', 'bearer ' +token)
             .then((res) => {
                 const body = res.body;
-                expect(body).to.contain.property('deletedCount').to.eql(1);
-                expect(body).to.contain.property('ok').to.eql(1);
+                expect(body).to.contain.property('deletedCount').to.eql(0);
+                expect(body).to.contain.property('ok').to.eql(0);
                 done();
             })
             .catch((err) => {console.log(err);done(err);});
