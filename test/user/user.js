@@ -1,11 +1,9 @@
 const expect = require('chai').expect;
 const request = require('supertest');
-let { verifyToken } = require('../../routes/jwtAuth');
 const User = require('../../models/User');
 
 const app = require('../../app');
 let token;
-let getUpdatedUser;
 
 let defaultUser = {
         FirstName:"Geetha",
@@ -14,8 +12,7 @@ let defaultUser = {
         PhoneNumber: "7358529473",
         EmailId: "bgeetha2514@gmail.com",
         UserName: "geetha",
-        Password: "nullvoid",
-        CreatedBy: "Admin"
+        Password: "nullvoid"
 }
 
 let updatedUser = {
@@ -26,21 +23,20 @@ let updatedUser = {
     PhoneNumber: "73585294731",
     EmailId: "bgeetha2514@gmail.com",
     UserName: "geetha",
-    Password: "nullvoid",
-    CreatedBy: "Admin"
+    Password: "nullvoid"
 }
 
 let saveUserId;
 
 describe('POST /user', () =>{
     before((done) => {
-           User.remove({EmailId: "bgeetha2514@gmail.com"});
-            done();
+        User.remove({EmailId: "bgeetha2514@gmail.com"});
+        done();
     })
 
     it('Authenticate User ', (done) => { 
         console.log("hitted Authenticate User");
-         request(app)
+        request(app)
                     .post('/userService/authenticateUser')
                     .send({ UserName: "balachandran", Password: "nullvoid" })
                     .then((res) => {
@@ -48,13 +44,15 @@ describe('POST /user', () =>{
                         token = body.token;
                         done();  
                     })
-                    .catch((err) => done(err));
     });
 
     it('OK, creating a new user', function(done) {
-        request(app).post('/userService/saveUser') 
-            .send(defaultUser)
+        try
+        {
+        request(app)
+            .post('/userService/saveUser') 
             .set('authorization', 'bearer ' + token)
+            .send(defaultUser)
             .then((res) => {
                 const body = res.body;
                 saveUserId = body._id;
@@ -68,7 +66,10 @@ describe('POST /user', () =>{
                 expect(body).to.contain.property('Password');
                 done();
             })
-            .catch((err) => {console.log(err);done(err);});
+        }
+        catch(err){
+            console.log(err);
+        }
             
     });
 
@@ -81,7 +82,7 @@ describe('POST /user', () =>{
                 expect(body).to.contain.property('message');
                 done();
             })
-            .catch((err) => {console.log(err);done(err);});
+            .catch((err) => {done(err);});
             
     });
 
@@ -96,9 +97,16 @@ describe('POST /user', () =>{
                 const body = res.body;
                 console.log(body);
                 expect(body).to.contain.property('_id');
+                expect(body).to.contain.property('FirstName');
+                expect(body).to.contain.property('MiddleName');
+                expect(body).to.contain.property('LastName');
+                expect(body).to.contain.property('PhoneNumber');
+                expect(body).to.contain.property('EmailId');
+                expect(body).to.contain.property('UserName');
+                expect(body).to.contain.property('Password');
                 done();
             })
-            .catch((err) => {console.log(err);done(err);});
+            .catch((err) => {done(err);});
             
     });
 
@@ -113,7 +121,7 @@ describe('POST /user', () =>{
                 expect(body).to.contain.property('ok').to.eql(0);
                 done();
             })
-            .catch((err) => {console.log(err);done(err);});
+            .catch((err) => {done(err);});
             
     });
 });

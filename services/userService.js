@@ -45,7 +45,6 @@ const deleteUser = async (_id) => {
 const authenticateUser = async (userName, password) => {
     try {
         const user = await User.findOne({ UserName: userName, Password: password })
-        console.log(user);
         return user;
     }
     catch(err) {
